@@ -1,3 +1,11 @@
+###
+```
+git clone https://github.com/denyocrworld/exercise1001
+cd exercise1001
+dart pub get
+code .
+```
+
 ### Isi Form dulu, WAJIB!!!
 [WAJIB DI ISI]
 Buka 
