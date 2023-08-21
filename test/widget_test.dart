@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:dio/dio.dart';
 import 'dart:io';
 
@@ -11,8 +13,8 @@ void main() async {
     print("----------------");
     return;
   }
-  List modules = [
-    "lib\\presentation\\login",
+  
+  List<String> modules = [
     "lib\\presentation\\login\\view\\login_view.dart",
     "lib\\presentation\\login\\controller\\login_controller.dart",
     "lib\\presentation\\hr\\hr_main_navigation\\view\\hr_main_navigation_view.dart",
@@ -35,15 +37,15 @@ void main() async {
 
   int point = 0;
   for (var m in modules) {
-    if (File(m).existsSync()) {
+    if (File(m.fix).existsSync()) {
       point++;
     } else {
-      print("${m} doesn't exists!");
+      print("${m.fix} doesn't exists!");
     }
   }
 
   var loginController =
-      File("lib\\presentation\\login\\controller\\login_controller.dart");
+      File("lib\\presentation\\login\\controller\\login_controller.dart".fix);
 
   if (loginController.existsSync()) {
     var controllerContent = loginController.readAsStringSync();
@@ -67,7 +69,8 @@ void main() async {
       point += 5;
     }
   }
-  var loginView = File("lib\\presentation\\login\\view\\login_loginView.dart");
+  var loginView =
+      File("lib\\presentation\\login\\view\\login_loginView.dart".fix);
   if (loginView.existsSync()) {
     var loginViewContent = loginView.readAsStringSync();
     if (loginViewContent.contains("controller.doLogin()")) {
@@ -84,6 +87,7 @@ void main() async {
   }
 
   print("POINT: $point");
+
   await Dio().post(
     "https://capekngoding.com/magicbook/api/scores",
     options: Options(
@@ -99,4 +103,22 @@ void main() async {
       "chapter": "Chapter 1001",
     },
   );
+}
+
+extension StringExtension on String {
+  String get fix {
+    String mode = Directory.current.path;
+    String separator = "/";
+    if (mode.contains("\\")) {
+      separator = "\\";
+    }
+
+    var path = this;
+    path = path.replaceAll('//', "(slash)");
+    path = path.replaceAll('\\', "(slash)");
+    path = path.replaceAll("/", "(slash)");
+    path = path.replaceAll("(slash)(slash)", "(slash)");
+    path = path.replaceAll("(slash)", separator);
+    return path;
+  }
 }
